@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssd-opa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oes
+      component: ssd-opa
+  template:
+    metadata:
+      labels:
+        app: oes
+        component: ssd-opa
+    spec:
+      volumes:
+        - name: ssd-opa-volume
+          configMap:
+            name: ssd-opa
+            items:
+              - key: ssd-opa.yaml
+                path: ssd-opa.yaml
+            defaultMode: 420
+      containers:
+        - name: ssd-opa
+          image: quay.io/opsmxpublic/ssd-opa:v1.0.0
+          ports:
+            - containerPort: 8200
+              protocol: TCP
+          volumeMounts:
+            - name: ssd-opa-volume
+              mountPath: /app/config/ssd-opa.yaml
+              subPath: ssd-opa.yaml

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssd-opa
+spec:
+  selector:
+    app: oes
+    component: ssd-opa
+  ports:
+    - name: ssd-opa
+      protocol: TCP
+      port: 8200
+      targetPort: 8200

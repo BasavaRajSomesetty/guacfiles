@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: opa
+    chart: oes-4.0.12
+    heritage: Helm
+    release: isd
+  name: opa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opa
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2023-08-28T09:40:19+05:30"
+        moniker.spinnaker.io/application: isd
+      creationTimestamp: null
+      labels:
+        app: opa
+        chart: oes-4.0.12
+        heritage: Helm
+        release: isd
+      name: opa
+    spec:
+      containers:
+      - args:
+        - run
+        - --server
+        image: quay.io/opsmxpublic/opa:v0.47.0
+        imagePullPolicy: IfNotPresent
+        name: opa
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - command:
+        - /bin/bash
+        - /tmp/config/opa-persist.sh
+        envFrom:
+        - secretRef:
+            name: oes-gate-secret
+        image: quay.io/opsmxpublic/customterraformstage:v1
+        imagePullPolicy: IfNotPresent
+        name: opa-persist
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp/config
+          name: opa-persist
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: opa-persist
+        name: opa-persist

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: supplychain-api
+  labels:
+    app: oes
+spec:
+  ports:
+    - name: supplychain-api
+      protocol: TCP
+      port: 8099
+      targetPort: 8099
+  selector:
+    app: oes
+    component: supplychain-api

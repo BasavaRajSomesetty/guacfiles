@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: supplychain-preprocessor
+  labels:
+    app: oes
+    component: supplychain-preprocessor
+spec:
+  ports:
+  - name: supplychain-preprocessor
+    port: 8058
+    protocol: TCP
+    targetPort: 8058
+  selector:
+    app: oes
+    component: supplychain-preprocessor
